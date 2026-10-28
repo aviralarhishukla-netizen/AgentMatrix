@@ -1,0 +1,30 @@
+class AgentFactory {
+  constructor(roomName) {
+    this.roomName = roomName;
+    this.agents = [];
+  }
+
+  createAgent(name, role) {
+    const agent = {
+      id: Math.random().toString(36.substring(2, 9)),
+      name: name,
+      role: role,
+      status: 'Ready in ' + this.roomName,
+      createdAt: new Date().toISOString()
+    };
+    this.agents.push(agent);
+    console.log(`[Agent Created] ${agent.name} (${agent.role})`);
+    return agent;
+  }
+
+  listAgents() {
+    return this.agents;
+  }
+}
+
+// Test the factory locally
+const matrixFactory = new AgentFactory("AgentMatrix Room");
+matrixFactory.createAgent("Alpha-Trader", "Market Analyst");
+matrixFactory.createAgent("Beta-Coder", "Backend Developer");
+
+module.exports = AgentFactory;
