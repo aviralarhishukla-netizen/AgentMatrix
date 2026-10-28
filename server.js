@@ -1,6 +1,5 @@
 const http = require('http');
 
-// Simple in-memory Agent Factory embedded directly to avoid module path issues
 class AgentFactory {
   constructor(roomName) {
     this.roomName = roomName;
@@ -24,13 +23,13 @@ class AgentFactory {
   }
 }
 
-// Initialize our Agent Factory for the Room
 const matrixFactory = new AgentFactory("AgentMatrix Central Room");
 matrixFactory.createAgent("Alpha-Trader", "Market Analyst");
 matrixFactory.createAgent("Beta-Coder", "Backend Developer");
 
 const server = http.createServer((req, res) => {
   if (req.url === '/agents') {
+    // Show JSON data for agents API
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       room: "AgentMatrix Central Room",
@@ -39,8 +38,32 @@ const server = http.createServer((req, res) => {
       agents: matrixFactory.listAgents()
     }, null, 2));
   } else {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('AgentMatrix Room is Live and Running!');
+    // Show a beautiful HTML Room page for the main URL
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>AgentMatrix Room</title>
+        <style>
+          body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; text-align: center; padding: 50px; }
+          .card { background: #1e293b; padding: 30px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+          h1 { color: #38bdf8; }
+          a { color: #34d399; text-decoration: none; font-weight: bold; font-size: 18px; }
+          a:hover { text-decoration: underline; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h1>AgentMatrix Central Room</h1>
+          <p>Status: <strong>Active & Running</strong></p>
+          <p>Welcome to the Decentralized B2B AI Agent Marketplace.</p>
+          <br>
+          <a href="/agents">👉 Click here to view active Agents (JSON)</a>
+        </div>
+      </body>
+      </html>
+    `);
   }
 });
 
